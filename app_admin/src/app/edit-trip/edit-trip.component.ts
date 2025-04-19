@@ -26,17 +26,17 @@ export class EditTripComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private tripDataService: TripDataService
+    private tripDataService: TripDataService,
   ) {}
 
   public onSubmit() {
     this.submitted = true;
-
+  
     if (this.editForm.valid) {
       this.tripDataService.updateTrip(this.editForm.value).subscribe({
         next: (value: any) => {
           console.log(value);
-          this.router.navigate(['']);
+          this.router.navigate(['/list-trips']);
         },
         error: (error: any) => {
           console.log('Error: ' + error);
