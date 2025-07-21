@@ -1,14 +1,14 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-const mongoose = require("mongoose");
+const User = require("../database/models").User;
 
-const User = mongoose.model("users");
 passport.use(
   new LocalStrategy(
     { usernameField: "email" },
     async (email, password, done) => {
       try {
-        const user = await User.findOne({ email: email }).exec();
+        const user = await User.findOne({ where: { email: email } });
+        console.log(user);
         if (!user) {
           return done(null, false, { message: "User not found" });
         }

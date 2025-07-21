@@ -1,11 +1,9 @@
-const mongoose = require("mongoose");
-const Trip = require("../models/travlr");
-const Model = mongoose.model("trips");
-const User = mongoose.model("users");
+const Trip = require("../database/models").Trip;
+const User = require("../database/models").User;
 
 // GET /trips - lists all the trips
 const tripsList = async (req, res) => {
-  const q = await Model.find({}).exec();
+  const q = await Trip.findAll();
 
   if (!q) {
     return res.status(404).json(err);
@@ -16,7 +14,7 @@ const tripsList = async (req, res) => {
 
 // GET /trips/:tripCode - lists a single trip
 const tripsFindByCode = async (req, res) => {
-  const q = await Model.find({ code: req.params.tripCode }).exec();
+  const q = await Trip.findOne({ where: { code: req.params.tripCode } });
 
   if (!q) {
     return res.status(404).json(err);
@@ -51,8 +49,7 @@ const tripsAddTrip = async (req, res) => {
 // and JSON message to the requesting client
 const tripsUpdateTrip = async (req, res) => {
   getUser(req, res, (req, res) => {
-    Trip.findOneAndUpdate(
-      { code: req.params.tripCode },
+    Trip.update(
       {
         code: req.body.code,
         name: req.body.name,
@@ -63,7 +60,7 @@ const tripsUpdateTrip = async (req, res) => {
         image: req.body.image,
         description: req.body.description,
       },
-      { new: true }
+      { where: { code: req.params.tripCode } },
     )
       .then((trip) => {
         if (!trip) {
@@ -88,7 +85,7 @@ const tripsUpdateTrip = async (req, res) => {
 const getUser = async (req, res, callback) => {
   if (req.payload && req.payload.email) {
     try {
-      const user = await User.findOne({ email: req.payload.email }).exec();
+      const user = await User.findOne({ where: { email: req.payload.email } });
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
