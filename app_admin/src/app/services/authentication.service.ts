@@ -39,11 +39,13 @@ export class AuthenticationService {
       return false;
     }
   }
-  public getCurrentUser(): User | undefined {
+
+  public async getCurrentUser(): Promise<User | undefined> {
     if (this.isLoggedIn()) {
       const token: string = this.getToken();
       const { email, name } = JSON.parse(atob(token.split('.')[1]));
-      return { email, name } as User;
+      const admin = await this.tripDataService.getUserRole(token);
+      return { email, name, admin } as User;
     }
     return undefined;
   }

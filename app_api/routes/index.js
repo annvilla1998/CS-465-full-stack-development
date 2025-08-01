@@ -5,6 +5,7 @@ const auth = jwt({ secret: process.env.JWT_SECRET, userProperty: 'payload' });
 
 const authController = require('../controllers/authentication');
 const tripsController = require("../controllers/trips");
+const usersController = require("../controllers/users");
 
 router
   .route('/login')
@@ -23,5 +24,9 @@ router
   .route("/trips/:tripCode")
   .get(tripsController.tripsFindByCode)
   .put(auth, tripsController.tripsUpdateTrip);
+
+router
+  .route("/users/:id")
+  .get(auth, usersController.getUser);
 
 module.exports = router;

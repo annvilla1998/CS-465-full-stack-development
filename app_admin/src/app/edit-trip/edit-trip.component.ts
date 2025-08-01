@@ -26,12 +26,12 @@ export class EditTripComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private tripDataService: TripDataService,
+    private tripDataService: TripDataService
   ) {}
 
   public onSubmit() {
     this.submitted = true;
-  
+
     if (this.editForm.valid) {
       this.tripDataService.updateTrip(this.editForm.value).subscribe({
         next: (value: any) => {
@@ -53,13 +53,9 @@ export class EditTripComponent implements OnInit {
     // Retrieve stashed trip ID
     let tripCode = localStorage.getItem('tripCode');
     if (!tripCode) {
-      alert('Something wrong, couldn’t find where I stashed tripCode!');
       this.router.navigate(['']);
       return;
     }
-
-    console.log('EditTripComponent::ngOnInit');
-    console.log('tripcode:' + tripCode);
 
     this.editForm = this.formBuilder.group({
       _id: [],
@@ -75,14 +71,23 @@ export class EditTripComponent implements OnInit {
 
     this.tripDataService.getTrip(tripCode).subscribe({
       next: (value: any) => {
-        this.trip = value; // Populate our record into the form
-        this.editForm.patchValue(value[0]);
+        this.trip = value;
+        this.editForm.setValue({
+          _id: [],
+          code: [tripCode],
+          name: [value.name],
+          length: [value.length],
+          start: [value.start],
+          resort: [value.resort],
+          perPerson: [value.pricePerPerson],
+          image: [value.image],
+          description: [value.description],
+        });
         if (!value) {
           this.message = 'No Trip Retrieved!';
         } else {
           this.message = 'Trip: ' + tripCode + ' retrieved';
         }
-        console.log(this.message);
       },
       error: (error: any) => {
         console.log('Error: ' + error);

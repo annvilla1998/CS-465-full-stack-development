@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
 import { Trip } from '../models/trips';
 import { User } from '../models/user';
 import { AuthResponse } from '../models/authresponse';
-// import { AuthenticationService } from '../services/authentication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -59,6 +58,35 @@ export class TripDataService {
 
   public register(user: User): Promise<AuthResponse> {
     return this.makeAuthApiCall('register', user);
+  }
+
+  public getUserRole(token: string): Promise<boolean> {
+    // Decode JWT token to get user ID
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.id;
+      
+      // Make API call to get user data
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }),
+      };
+      
+      return this.http.get<User>(`${this.apiBaseUrl}/users/${userId}`, httpOptions)
+        .toPromise()
+        .then((user: User | undefined) => {
+          return user?.admin || false;
+        })
+        .catch((error) => {
+          console.error('Error fetching user role:', error);
+          return false;
+        });
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return Promise.resolve(false);
+    }
   }
 
   private makeAuthApiCall(urlPath: string, user: User): Promise<AuthResponse> {

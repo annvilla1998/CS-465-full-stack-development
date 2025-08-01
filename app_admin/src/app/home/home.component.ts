@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
-import { TripCardComponent } from '../trip-card/trip-card.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -10,9 +10,18 @@ import { TripCardComponent } from '../trip-card/trip-card.component';
   styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private router: Router
+  ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    // Check if the user is logged in
+    if (!this.isLoggedIn()) {
+      // Redirect to login if not logged in
+      this.router.navigate(['/login']);
+    }
+  }
   public isLoggedIn(): boolean {
     return this.authenticationService.isLoggedIn();
   }

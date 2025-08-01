@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { trips } from '../data/trips';
 import { CommonModule } from '@angular/common';
 import { TripCardComponent } from '../trip-card/trip-card.component';
 import { Trip } from '../models/trips';
@@ -18,6 +17,7 @@ import { AuthenticationService } from '../services/authentication.service';
 export class TripListingComponent implements OnInit {
   trips?: Trip[];
   message: string = '';
+  isAdmin: boolean = false; 
 
   constructor(
     private tripDataService: TripDataService,
@@ -28,6 +28,20 @@ export class TripListingComponent implements OnInit {
 
   public isLoggedIn(): boolean {
     return this.authenticationService.isLoggedIn();
+  }
+
+  public isAdminUser(): boolean {
+    return this.isAdmin; 
+  }
+
+  private async checkAdminStatus(): Promise<void> {
+    try {
+      const user = await this.authenticationService.getCurrentUser();
+      this.isAdmin = user?.admin || false;
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      this.isAdmin = false;
+    }
   }
 
   public addTrip(): void {
@@ -53,6 +67,11 @@ export class TripListingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getStuff();
+    if (this.isLoggedIn()) {
+      this.getStuff();
+      this.checkAdminStatus(); 
+    } else {
+      this.router.navigate(['login']);
+    }
   }
 }

@@ -4,11 +4,13 @@ import { TripListingComponent } from './trip-listing/trip-listing.component';
 import { EditTripComponent } from './edit-trip/edit-trip.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 
 export const routes: Routes = [
     { path: 'add-trip', component: AddTripComponent},
     { path: 'edit-trip', component: EditTripComponent},
     { path: 'login', component: LoginComponent},
+    { path: 'signup', component: SignupComponent},
     { path: 'list-trips', component: TripListingComponent},
     { path: '', component: HomeComponent, pathMatch: 'full'}
 ];
