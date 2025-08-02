@@ -62,13 +62,13 @@
                 <label>Per Person:</label>        
         <input
           type="text"
-          formControlName="perPerson"
+          formControlName="pricePerPerson"
           placeholder="Perperson"
           class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f['perPerson'].errors }"
+          [ngClass]="{ 'is-invalid': submitted && f['pricePerPerson'].errors }"
         />
-        <div *ngIf="submitted && f['perPerson'].errors">
-          <div *ngIf="f['perPerson'].errors?.['required']">
+        <div *ngIf="submitted && f['pricePerPerson'].errors">
+          <div *ngIf="f['pricePerPerson'].errors?.['required']">
                          Per Person is required            
           </div>
                  

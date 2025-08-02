@@ -1,0 +1,56 @@
+<div class="col-md-4 m-auto p-5 w-75">
+   
+  <h2 class="text-center">Book a Trip to {{ trip.name }}</h2>
+  <div class="text-center m-3">
+    <div>
+      <img
+        src="assets/images/{{ trip.image }}"
+        alt="trip thumbnail"
+        class="card-img-top"
+      />
+    </div>
+    <div class="mt-3 d-flex flex-column align-items-start gap-2">
+      <h5>{{ trip.resort }}</h5>
+      <h6>{{ trip.pricePerPerson }}</h6>
+      <h6>{{ trip.description }}</h6>
+    </div>
+  </div>
+  <form *ngIf="bookForm" [formGroup]="bookForm" (ngSubmit)="onSubmit()">
+         
+    <div class="form-group">
+              <label>Length:</label>        
+      <input
+        type="text"
+        formControlName="length"
+        placeholder="Name"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['length'].errors }"
+      />
+      <div *ngIf="submitted && f['length'].errors">
+        <div *ngIf="f['length'].errors?.['required']">
+                       Length is required            
+        </div>
+               
+      </div>
+           
+    </div>
+    <div class="form-group">
+              <label>Start:</label>        
+      <input
+        type="date"
+        formControlName="start"
+        placeholder="Start"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['start'].errors }"
+      />
+      <div *ngIf="submitted && f['start'].errors">
+        <div *ngIf="f['start'].errors?.['required']">
+                       Date is required            
+        </div>
+               
+      </div>
+           
+    </div>
+      <button type="submit" class="btn btn-info mt-3">Book</button>    
+  </form>
+</div>

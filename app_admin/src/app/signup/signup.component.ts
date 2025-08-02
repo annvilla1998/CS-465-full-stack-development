@@ -8,11 +8,11 @@ import { CommonModule } from '@angular/common';
   selector: 'app-signup',
   imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.css'],
 })
 export class SignupComponent implements OnInit {
   public formError: string = '';
   public credentials = {
+    id: 0,
     name: '',
     email: '',
     password: '',

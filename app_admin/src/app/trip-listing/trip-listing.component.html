@@ -2,7 +2,7 @@
  <div *ngIf="isLoggedIn() && isAdminUser()" class="mb-3">
     <button (click)="addTrip()" class="btn btn-info">Add Trip</button>
  </div>
-<div class="row">
+<div class="row mb-3">
   <div *ngFor="let trip of trips" class="col-md-4">
     <app-trip-card [trip]="trip" class="card-deck mt-2"></app-trip-card>
   </div>

@@ -1,0 +1,20 @@
+<div class="row mb-3 mt-5">
+  <h2 class="mb-4">My Trips</h2>
+  <div *ngFor="let reservation of reservations" class="col-md-4">
+    <div class="card ml-4">
+      <div class="card-header">{{ reservation.trip.name }}</div>
+      <img
+        src="assets/images/{{ reservation.trip.image }}"
+        alt="trip thumbnail"
+        class="card-img-top"
+      />     
+      <div class="card-body">
+        <h5 class="card-title">{{ reservation.trip.name }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ reservation.trip.resort }}</h6>
+        <p class="card-text">{{ reservation.trip.description }}</p>
+        <p class="card-text"><strong>Duration:</strong> {{ reservation.length }}</p>
+        <p class="card-text"><strong>Start Date:</strong> {{ reservation.start | date:'fullDate' }}</p>
+      </div>
+    </div>
+  </div>
+</div>

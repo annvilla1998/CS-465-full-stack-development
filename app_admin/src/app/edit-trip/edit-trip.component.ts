@@ -9,13 +9,13 @@ import {
 } from '@angular/forms';
 import { TripDataService } from '../services/trip-data.service';
 import { Trip } from '../models/trips';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-edit-trip',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './edit-trip.component.html',
-  styleUrl: './edit-trip.component.css',
 })
 export class EditTripComponent implements OnInit {
   public editForm!: FormGroup;
@@ -26,16 +26,22 @@ export class EditTripComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private tripDataService: TripDataService
+    private tripDataService: TripDataService,
+    private authenticationService: AuthenticationService
   ) {}
 
   public onSubmit() {
     this.submitted = true;
 
+    // Check if user is still logged in before submitting
+    if (!this.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     if (this.editForm.valid) {
       this.tripDataService.updateTrip(this.editForm.value).subscribe({
         next: (value: any) => {
-          console.log(value);
           this.router.navigate(['/list-trips']);
         },
         error: (error: any) => {
@@ -43,13 +49,23 @@ export class EditTripComponent implements OnInit {
         },
       });
     }
-  } // get the form short name to access the form fields
+  } 
+
+  public isLoggedIn(): boolean {
+    return this.authenticationService.isLoggedIn();
+  }
 
   get f() {
     return this.editForm.controls;
   }
 
   ngOnInit(): void {
+    // Check if user is logged in first
+    if (!this.isLoggedIn()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
     // Retrieve stashed trip ID
     let tripCode = localStorage.getItem('tripCode');
     if (!tripCode) {
@@ -58,13 +74,11 @@ export class EditTripComponent implements OnInit {
     }
 
     this.editForm = this.formBuilder.group({
-      _id: [],
+      id: [],
       code: [tripCode, Validators.required],
       name: ['', Validators.required],
-      length: ['', Validators.required],
-      start: ['', Validators.required],
       resort: ['', Validators.required],
-      perPerson: ['', Validators.required],
+      pricePerPerson: ['', Validators.required],
       image: ['', Validators.required],
       description: ['', Validators.required],
     });
@@ -73,13 +87,13 @@ export class EditTripComponent implements OnInit {
       next: (value: any) => {
         this.trip = value;
         this.editForm.setValue({
-          _id: [],
+          id: [],
           code: [tripCode],
           name: [value.name],
           length: [value.length],
           start: [value.start],
           resort: [value.resort],
-          perPerson: [value.pricePerPerson],
+          pricePerPerson: [value.pricePerPerson],
           image: [value.image],
           description: [value.description],
         });

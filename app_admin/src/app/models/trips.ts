@@ -1,11 +1,9 @@
 export interface Trip {
-    _id: string,
+    id: number,
     code: string,
     name: string,
-    length: string,
-    start: Date,
     resort: string,
-    perPerson: string,
+    pricePerPerson: string,
     image: string,
     description: string,
 }

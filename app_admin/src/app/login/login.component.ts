@@ -8,11 +8,11 @@ import { CommonModule } from '@angular/common';
   selector: 'app-login',
   imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
   public formError: string = '';
   public credentials = {
+    id: 0,
     name: '',
     email: '',
     password: '',

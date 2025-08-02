@@ -1,22 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TripCardComponent } from '../trip-card/trip-card.component';
-import { Trip } from '../models/trips';
 import { TripDataService } from '../services/trip-data.service';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
-  selector: 'app-trip-listing',
+  selector: 'app-my-trips',
   standalone: true,
-  imports: [CommonModule, TripCardComponent],
+  imports: [CommonModule],
   providers: [TripDataService],
-  templateUrl: './trip-listing.component.html',
+  templateUrl: './my-trips.component.html',
 })
-export class TripListingComponent implements OnInit {
-  trips?: Trip[];
+export class MyTripsComponent implements OnInit {
+  reservations?: any[];
   message: string = '';
-  isAdmin: boolean = false; 
 
   constructor(
     private tripDataService: TripDataService,
@@ -29,29 +26,10 @@ export class TripListingComponent implements OnInit {
     return this.authenticationService.isLoggedIn();
   }
 
-  public isAdminUser(): boolean {
-    return this.isAdmin; 
-  }
-
-  private async checkAdminStatus(): Promise<void> {
-    try {
-      const user = await this.authenticationService.getCurrentUser();
-      this.isAdmin = user?.admin || false;
-    } catch (error) {
-      console.error('Error checking admin status:', error);
-      this.isAdmin = false;
-    }
-  }
-
-  public addTrip(): void {
-    this.router.navigate(['add-trip']);
-  }
-
-
-  private getStuff(): void {
-    this.tripDataService.getTrips().subscribe({
+  private getMyTrips(): void {
+    this.tripDataService.getUserTrips().subscribe({
       next: (value: any) => {
-        this.trips = value;
+        this.reservations = value;
         if (value.length > 0) {
           this.message = 'There are ' + value.length + ' trips available.';
         } else {
@@ -67,8 +45,7 @@ export class TripListingComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isLoggedIn()) {
-      this.getStuff();
-      this.checkAdminStatus(); 
+      this.getMyTrips(); 
     } else {
       this.router.navigate(['login']);
     }

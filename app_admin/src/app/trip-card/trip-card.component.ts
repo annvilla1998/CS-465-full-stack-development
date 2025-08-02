@@ -9,7 +9,6 @@ import { AuthenticationService } from '../services/authentication.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './trip-card.component.html',
-  styleUrl: './trip-card.component.css',
 })
 export class TripCardComponent implements OnInit {
   @Input('trip') 
@@ -47,5 +46,11 @@ export class TripCardComponent implements OnInit {
     localStorage.removeItem('tripCode');
     localStorage.setItem('tripCode', trip.code);
     this.router.navigate(['edit-trip']);
+  }
+
+  public bookTrip(trip: Trip) {
+    localStorage.removeItem('tripCode');
+    localStorage.setItem('tripCode', trip.code);
+    this.router.navigate(['book-trip']);
   }
 }

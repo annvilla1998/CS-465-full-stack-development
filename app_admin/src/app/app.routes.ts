@@ -5,9 +5,13 @@ import { EditTripComponent } from './edit-trip/edit-trip.component';
 import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
+import { BookTripComponent } from './book-trip/book-trip.component';
+import { MyTripsComponent } from './my-trips/my-trips.component';
 
 export const routes: Routes = [
     { path: 'add-trip', component: AddTripComponent},
+    { path: 'my-trips', component: MyTripsComponent},
+    { path: 'book-trip', component: BookTripComponent},
     { path: 'edit-trip', component: EditTripComponent},
     { path: 'login', component: LoginComponent},
     { path: 'signup', component: SignupComponent},

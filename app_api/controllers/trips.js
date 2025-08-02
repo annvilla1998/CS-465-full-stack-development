@@ -33,7 +33,7 @@ const tripsAddTrip = async (req, res) => {
         length: req.body.length,
         start: req.body.start,
         resort: req.body.resort,
-        perPerson: req.body.perPerson,
+        pricePerPerson: req.body.pricePerPerson,
         image: req.body.image,
         description: req.body.description,
       });
@@ -45,8 +45,6 @@ const tripsAddTrip = async (req, res) => {
 };
 
 // PUT: /trips/:tripCode - Adds a new Trip
-// Regardless of outcome, response must include HTML status code
-// and JSON message to the requesting client
 const tripsUpdateTrip = async (req, res) => {
   getUser(req, res, (req, res) => {
     Trip.update(
@@ -56,7 +54,7 @@ const tripsUpdateTrip = async (req, res) => {
         length: req.body.length,
         start: req.body.start,
         resort: req.body.resort,
-        perPerson: req.body.perPerson,
+        pricePerPerson: req.body.pricePerPerson,
         image: req.body.image,
         description: req.body.description,
       },

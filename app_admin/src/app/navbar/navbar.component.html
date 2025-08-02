@@ -1,5 +1,7 @@
 <nav class="navbar navbar-expand navbar-light bg-light">
-  <a class="navbar-brand" href="#" title="nav"><img src="/assets/images/logo.png" alt=""/></a>
+  <a class="navbar-brand" href="#" title="nav"
+    ><img src="/assets/images/logo.png" alt=""
+  /></a>
   <button
     class="navbar-toggler"
     type="button"
@@ -14,17 +16,30 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
-      <a class="nav-item nav-link active" routerLink="listtrips"
-        >Trips<span class="sr-only">(current)</span></a
-      >
+      <a class="nav-item nav-link active" routerLink="list-trips">Trips</a>
     </div>
   </div>
-  <div class="navbar-end">
-    <a class="navbar-item" routerLink="login" href="/login" *ngIf="!isLoggedIn()">
-      <span class="has-icon-left">Log In</span>
+  <div class="d-flex gap-5">
+    <a
+      class="navbar-item"
+      routerLink="my-trips"
+      href="/my-trips"
+      *ngIf="isLoggedIn()"
+    >
+      <span *ngIf="!isAdminUser()" class="has-icon-left">My Trips</span>
     </a>
-    <a class="navbar-item" (click)="onLogout()" *ngIf="isLoggedIn()">
-      <span class="has-icon-left">Log Out</span>
-    </a>
+    <div class="navbar-end me-4">
+      <a
+        class="navbar-item"
+        routerLink="login"
+        href="/login"
+        *ngIf="!isLoggedIn()"
+      >
+        <span class="has-icon-left">Log In</span>
+      </a>
+      <a class="navbar-item me-4" (click)="onLogout()" *ngIf="isLoggedIn()">
+        <span class="has-icon-left">Log Out</span>
+      </a>
+    </div>
   </div>
 </nav>
