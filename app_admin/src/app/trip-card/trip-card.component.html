@@ -11,15 +11,17 @@
     <h6 class="card-subtitle mb-2 text-muted">   {{ trip.resort }}  </h6>
        
     <p class="card-subtitle mt-3 mb-3 text-muted">
-       {{ trip.length }} only {{ trip.perPerson | currency : "USD" : 'symbol' }} per
+       {{ trip.length }} only {{ trip.pricePerPerson | currency : "USD" : 'symbol' }} per
       person    
     </p>
        
     <p class="card-text" [innerHTML]="trip.description">   </p>
-      <div *ngIf="isLoggedIn()">
+      <div *ngIf="isLoggedIn() && isAdminUser()" class="mt-3">
         <button (click)="editTrip(trip)" class="btn btn-info">Edit Trip</button>
     </div>
+      <div *ngIf="isLoggedIn() && !isAdminUser()" class="mt-3">
+        <button (click)="bookTrip(trip)" class="btn btn-info">Book Trip</button>
+    </div>
   </div>
-     
 </div>
    

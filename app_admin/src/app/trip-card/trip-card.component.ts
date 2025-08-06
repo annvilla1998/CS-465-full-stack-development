@@ -9,17 +9,34 @@ import { AuthenticationService } from '../services/authentication.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './trip-card.component.html',
-  styleUrl: './trip-card.component.css',
 })
 export class TripCardComponent implements OnInit {
-  @Input('trip') trip: any;
+  @Input('trip') 
+  trip: any;
+  isAdmin: boolean = false; 
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.checkAdminStatus(); 
+  }
+
+  public isAdminUser(): boolean {
+    return this.isAdmin; 
+  }
+
+  private async checkAdminStatus(): Promise<void> {
+    try {
+      const user = await this.authenticationService.getCurrentUser();
+      this.isAdmin = user?.admin || false;
+    } catch (error) {
+      console.error('Error checking admin status:', error);
+      this.isAdmin = false;
+    }
+  }
 
   public isLoggedIn(): boolean {
     return this.authenticationService.isLoggedIn();
@@ -29,5 +46,11 @@ export class TripCardComponent implements OnInit {
     localStorage.removeItem('tripCode');
     localStorage.setItem('tripCode', trip.code);
     this.router.navigate(['edit-trip']);
+  }
+
+  public bookTrip(trip: Trip) {
+    localStorage.removeItem('tripCode');
+    localStorage.setItem('tripCode', trip.code);
+    this.router.navigate(['book-trip']);
   }
 }

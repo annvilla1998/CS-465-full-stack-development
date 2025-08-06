@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { Trip } from '../models/trips';
 import { User } from '../models/user';
 import { AuthResponse } from '../models/authresponse';
-// import { AuthenticationService } from '../services/authentication.service';
+import { Reservation } from '../models/reservation';
 
 @Injectable({
   providedIn: 'root',
@@ -14,12 +14,13 @@ import { AuthResponse } from '../models/authresponse';
 export class TripDataService {
   private apiBaseUrl = 'http://localhost:3000/api';
   private url = `${this.apiBaseUrl}/trips`;
+  private user: User | undefined;
 
   constructor(
     private http: HttpClient,
-    @Inject(BROWSER_STORAGE) private storage: Storage,
-    // private authenticationService: AuthenticationService
-  ) {}
+    @Inject(BROWSER_STORAGE) private storage: Storage
+  ) // private authenticationService: AuthenticationService
+  {}
 
   getTrips(): Observable<Trip[]> {
     return this.http.get<Trip[]>(this.url);
@@ -53,12 +54,95 @@ export class TripDataService {
     );
   }
 
+  bookTrip(formData: Reservation, tripId: number): Observable<Reservation> {
+    const token = this.storage.getItem('travlr-token');
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    // Get user ID from JWT token
+    let userId: string;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      userId = payload.id;
+    } catch (error) {
+      throw new Error('Invalid authentication token');
+    }
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
+    return this.http.post<Reservation>(
+      `${this.apiBaseUrl}/users/${userId}/reservations`,
+      { ...formData, tripId},
+      httpOptions
+    );
+  }
+
+  getUserTrips(): Observable<Trip[]> {
+    const token = this.storage.getItem('travlr-token');
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+
+    // Get user ID from JWT token
+    let userId: string;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      userId = payload.id;
+    } catch (error) {
+      throw new Error('Invalid authentication token');
+    }
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      }),
+    };
+    return this.http.get<Trip[]>(`${this.apiBaseUrl}/users/${userId}/reservations`, httpOptions);
+  }
+
   public login(user: User): Promise<AuthResponse> {
     return this.makeAuthApiCall('login', user);
   }
 
   public register(user: User): Promise<AuthResponse> {
     return this.makeAuthApiCall('register', user);
+  }
+
+  public getUser(token: string): Promise<User> | null {
+    // Decode JWT token to get user ID
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userId = payload.id;
+
+      // Make API call to get user data
+      const httpOptions = {
+        headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        }),
+      };
+
+      return this.http
+        .get<User>(`${this.apiBaseUrl}/users/${userId}`, httpOptions)
+        .toPromise()
+        .then((user: User | undefined) => {
+          this.user = user;
+          return this.user;
+        })
+        .catch((error) => {
+          console.error('Error fetching user role:', error);
+          return error.message || error;
+        });
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   }
 
   private makeAuthApiCall(urlPath: string, user: User): Promise<AuthResponse> {
