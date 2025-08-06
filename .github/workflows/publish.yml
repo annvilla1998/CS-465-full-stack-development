@@ -26,13 +26,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build
     - name: Start backend
-      run: npm start
+      run: npm ci && npm start
       working-directory: ./
   
     - name: Start frontend
-      run: npm start
+      run: npm ci && npm start
       working-directory: ./app-admin
     
