@@ -2,6 +2,7 @@ import { BROWSER_STORAGE } from '../storage';
 import { Injectable, Inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment';
 
 import { Trip } from '../models/trips';
 import { User } from '../models/user';
@@ -12,7 +13,7 @@ import { Reservation } from '../models/reservation';
   providedIn: 'root',
 })
 export class TripDataService {
-  private apiBaseUrl = 'http://localhost:3000/api';
+  private apiBaseUrl = environment.apiBaseUrl || 'http://localhost:3000/api';
   private url = `${this.apiBaseUrl}/trips`;
   private user: User | undefined;
 

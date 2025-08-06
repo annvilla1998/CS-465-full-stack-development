@@ -3,10 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "start:dev": "concurrently \"npm start --prefix ./\" \"npm start --prefix ./app_admin\"",
+    "build": "cd app_admin && npm run build",
+    "postbuild": "echo 'Build completed successfully'"
   },
   "dependencies": {
     "@sequelize/postgres": "^7.0.0-alpha.46",
+    "concurrently": "^9.2.0",
     "cookie-parser": "~1.4.4",
     "crypto": "^1.0.1",
     "debug": "~2.6.9",

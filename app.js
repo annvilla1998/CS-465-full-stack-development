@@ -35,11 +35,30 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+
+// Serve Angular admin app in production
+if (process.env.NODE_ENV === 'production') {
+  console.log('Production mode: Serving Angular admin from /admin');
+  app.use('/admin', express.static(path.join(__dirname, 'app_admin/dist/travlr-admin/browser')));
+  
+  // Handle Angular routing - redirect all non-API routes to index.html
+  app.get('/admin/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'app_admin/dist/travlr-admin/browser/index.html'));
+  });
+} else {
+  console.log('Development mode: Angular admin not served from Express');
+}
+
 app.use(passport.initialize());
 
 // Enable CORS
 app.use("/api", (req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  // In production, allow same origin; in development, allow localhost:4200
+  const allowedOrigin = process.env.NODE_ENV === 'production' 
+    ? req.headers.origin || `https://${req.headers.host}`
+    : "http://localhost:4200";
+    
+  res.header("Access-Control-Allow-Origin", allowedOrigin);
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization"
