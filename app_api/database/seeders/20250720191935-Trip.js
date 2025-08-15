@@ -22,7 +22,7 @@ module.exports = {
         pricePerPerson: "1199.00",
         image: "reef2.jpg",
         description:
-        "Dawson's Reef Integer magna leo, posuere et dignissim vitae, porttitor at odio. Pellentesque a metus nec magna placerat volutpat. Nunc nisi mi, elementum sit amet aliquet quis, tristique quis nisl. Curabitur odio lacus, blandit ut hendrerit.",
+          "Dawson's Reef Integer magna leo, posuere et dignissim vitae, porttitor at odio. Pellentesque a metus nec magna placerat volutpat. Nunc nisi mi, elementum sit amet aliquet quis, tristique quis nisl. Curabitur odio lacus, blandit ut hendrerit.",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -33,7 +33,7 @@ module.exports = {
         pricePerPerson: "1999.00",
         image: "reef3.jpg",
         description:
-        "Clair's Reef Donec sed felis risus. Nulla facilisi. Donec a orci tellus, et auctor odio. Fusce ac orci nibh, quis semper arcu. Cras orci neque, euismod et accumsan ac, sagittis molestie lorem. Proin odio sapien, elementum at tempor non.",
+          "Clair's Reef Donec sed felis risus. Nulla facilisi. Donec a orci tellus, et auctor odio. Fusce ac orci nibh, quis semper arcu. Cras orci neque, euismod et accumsan ac, sagittis molestie lorem. Proin odio sapien, elementum at tempor non.",
         createdAt: new Date(),
         updatedAt: new Date(),
       },

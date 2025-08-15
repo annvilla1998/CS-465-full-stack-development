@@ -36,17 +36,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-// Serve Angular admin app in production
+// Serve Angular frontend static files in production
 if (process.env.NODE_ENV === 'production') {
-  console.log('Production mode: Serving Angular admin from /admin');
-  app.use('/admin', express.static(path.join(__dirname, 'app_admin/dist/travlr-admin/browser')));
-  
-  // Handle Angular routing - redirect all non-API routes to index.html
-  app.get('/admin/*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'app_admin/dist/travlr-admin/browser/index.html'));
-  });
+  console.log('Production mode: Serving Angular frontend static files');
+  app.use(express.static(path.join(__dirname, 'frontend/dist/travlr-admin/browser')));
 } else {
-  console.log('Development mode: Angular admin not served from Express');
+  console.log('Development mode: Angular frontend not served from Express');
 }
 
 app.use(passport.initialize());
@@ -67,7 +62,19 @@ app.use("/api", (req, res, next) => {
   next();
 });
 
+// API routes - MUST come before catch-all route
 app.use("/api", apiRouter);
+
+// Handle Angular routing in production - redirect all non-API routes to index.html
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res, next) => {
+    // Only handle non-API routes
+    if (req.path.startsWith('/api')) {
+      return next(); // Let it fall through to 404 handler
+    }
+    res.sendFile(path.join(__dirname, 'frontend/dist/travlr-admin/browser/index.html'));
+  });
+}
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

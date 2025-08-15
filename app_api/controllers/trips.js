@@ -4,7 +4,7 @@ const User = require("../database/models").User;
 // GET /trips - lists all the trips
 const tripsList = async (req, res) => {
   const q = await Trip.findAll();
-
+  console.log(q, "from trip endpoint")
   if (!q) {
     return res.status(404).json(err);
   } else {

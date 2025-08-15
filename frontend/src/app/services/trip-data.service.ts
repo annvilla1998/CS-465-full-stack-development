@@ -13,7 +13,7 @@ import { Reservation } from '../models/reservation';
   providedIn: 'root',
 })
 export class TripDataService {
-  private apiBaseUrl = environment.apiBaseUrl || 'http://localhost:3000/api';
+  private apiBaseUrl = environment.apiBaseUrl + '/api';
   private url = `${this.apiBaseUrl}/trips`;
   private user: User | undefined;
 
@@ -24,7 +24,9 @@ export class TripDataService {
   {}
 
   getTrips(): Observable<Trip[]> {
-    return this.http.get<Trip[]>(this.url);
+    const trips = this.http.get<Trip[]>(this.url);
+    console.log(trips, "FROM GETTRIPS", this.url)
+    return trips;
   }
 
   addTrip(formData: Trip): Observable<Trip> {

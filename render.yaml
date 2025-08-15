@@ -1,0 +1,26 @@
+databases:
+  - name: travlr-db
+    databaseName: travlr
+    user: travlr_user
+    region: oregon
+
+services:
+  - type: web
+    name: travlr-app
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: POSTGRES_URI
+        fromDatabase:
+          name: travlr-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PASSPORT_SECRET
+        generateValue: true
+    healthCheckPath: /api/trips
